@@ -1,4 +1,4 @@
-package com.seonlim.mathreview.user.dto;
+package com.seonlim.mathreview.user.dto.kafka;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

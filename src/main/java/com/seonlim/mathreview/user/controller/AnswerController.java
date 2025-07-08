@@ -1,7 +1,6 @@
 package com.seonlim.mathreview.user.controller;
 
-import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
-import com.seonlim.mathreview.user.repository.AnswerRepository;
+import com.seonlim.mathreview.user.dto.controller.AnswerSubmitRequest;
 import com.seonlim.mathreview.user.service.AnswerSubmitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

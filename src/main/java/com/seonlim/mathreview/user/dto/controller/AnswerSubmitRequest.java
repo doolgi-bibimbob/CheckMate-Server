@@ -1,4 +1,4 @@
-package com.seonlim.mathreview.user.dto;
+package com.seonlim.mathreview.user.dto.controller;
 
 import lombok.Data;
 import lombok.Getter;

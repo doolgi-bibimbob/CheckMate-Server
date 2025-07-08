@@ -2,7 +2,7 @@ package com.seonlim.mathreview.user.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.seonlim.mathreview.user.dto.GptReviewRequest;
+import com.seonlim.mathreview.user.dto.kafka.GptReviewRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

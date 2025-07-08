@@ -1,11 +1,9 @@
 package com.seonlim.mathreview.user.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seonlim.mathreview.problem.entity.Problem;
 import com.seonlim.mathreview.problem.repository.ProblemRepository;
-import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
-import com.seonlim.mathreview.user.dto.GptReviewRequest;
+import com.seonlim.mathreview.user.dto.controller.AnswerSubmitRequest;
+import com.seonlim.mathreview.user.dto.kafka.GptReviewRequest;
 import com.seonlim.mathreview.user.entity.Answer;
 import com.seonlim.mathreview.user.entity.AnswerStatus;
 import com.seonlim.mathreview.user.entity.User;
@@ -14,7 +12,6 @@ import com.seonlim.mathreview.user.repository.AnswerRepository;
 import com.seonlim.mathreview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
