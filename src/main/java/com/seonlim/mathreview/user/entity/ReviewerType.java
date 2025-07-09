@@ -1,9 +1,12 @@
 package com.seonlim.mathreview.user.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum ReviewerType {
     STUDENT("STUDENT"),
     TEACHER("TEACHER"),
-    ADMIN("ADMIN");
+    AI("AI");
 
     private final String type;
 
@@ -11,7 +14,4 @@ public enum ReviewerType {
         this.type = type;
     }
 
-    public String getType() {
-        return type;
-    }
 }

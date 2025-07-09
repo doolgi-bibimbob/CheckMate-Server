@@ -1,17 +1,23 @@
 package com.seonlim.mathreview.user.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Review {
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "solution_id")
+    @JoinColumn(name = "amswer_id")
     private Answer answer;
 
     @ManyToOne(optional = true)
@@ -21,7 +27,6 @@ public class Review {
     @Enumerated(EnumType.STRING)
     private ReviewerType reviewerType;
 
-    @Lob
     private String content;
 
     private int rating;

@@ -27,7 +27,7 @@ public class AnswerService {
 
     public void submit(AnswerSubmitRequest request) {
         Problem problem = problemRepository.findById(request.getProblemId())
-                .orElseThrow(() -> new NoSuchBeanDefinitionException(request.getProblemId().getClass()));
+                .orElseThrow(() -> new IllegalArgumentException("문제 ID가 유효하지 않습니다: " + request.getProblemId()));
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
