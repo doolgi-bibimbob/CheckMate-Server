@@ -25,14 +25,9 @@ public class Problem {
     )
     private List<Tag> tags = new ArrayList<>();
 
-//    @ElementCollection
-//    @CollectionTable(name = "problem_solution_images", joinColumns = @JoinColumn(name = "problem_id"))
-//    @Column(name = "image_url")
-//    private List<String> solutionImageUrls = new ArrayList<>();
     private String solutionImageUrl;
 
     private String problemImageUrl;
 
-//    @Lob
     private String content;
 }
