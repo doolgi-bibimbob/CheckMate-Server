@@ -42,6 +42,9 @@ public class AnswerService {
 
         answerRepository.save(answer);
 
+        Optional.ofNullable(answer.getId())
+                .ifPresent(request::setAnswerId);
+
         Optional.ofNullable(problem.getProblemImageUrl())
                 .ifPresent(request::setProblemImgUrl);
 

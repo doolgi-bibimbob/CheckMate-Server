@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class AnswerSubmitRequest {
     private Long userId;
     private Long problemId;
+    private Long answerId;
     private String problemImgUrl;
     private String answerImgUrl;
     private String solutionImgUrl;
