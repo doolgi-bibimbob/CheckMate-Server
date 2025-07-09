@@ -1,25 +1,24 @@
-package com.seonlim.mathreview.user.kafka;
+package com.seonlim.mathreview.user.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.seonlim.mathreview.user.dto.kafka.GptReviewRequest;
+import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ReviewKafkaProducer {
+public class ReviewRequestKafkaProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    public void sendReviewRequest(GptReviewRequest payload) {
+    public void sendReviewRequest(AnswerSubmitRequest request) {
         try {
-            String json = objectMapper.writeValueAsString(payload);
-            kafkaTemplate.send("gpt-review-request", json);
+            String json = objectMapper.writeValueAsString(request);
+            kafkaTemplate.send("gpt-review-requests", json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to serialize review request", e);
         }
     }
-
 }

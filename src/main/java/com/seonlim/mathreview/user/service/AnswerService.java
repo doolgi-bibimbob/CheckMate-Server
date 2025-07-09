@@ -2,12 +2,11 @@ package com.seonlim.mathreview.user.service;
 
 import com.seonlim.mathreview.problem.entity.Problem;
 import com.seonlim.mathreview.problem.repository.ProblemRepository;
-import com.seonlim.mathreview.user.dto.controller.AnswerSubmitRequest;
-import com.seonlim.mathreview.user.dto.kafka.GptReviewRequest;
+import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
 import com.seonlim.mathreview.user.entity.Answer;
 import com.seonlim.mathreview.user.entity.AnswerStatus;
 import com.seonlim.mathreview.user.entity.User;
-import com.seonlim.mathreview.user.kafka.ReviewKafkaProducer;
+import com.seonlim.mathreview.user.kafka.producer.ReviewRequestKafkaProducer;
 import com.seonlim.mathreview.user.repository.AnswerRepository;
 import com.seonlim.mathreview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +14,16 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AnswerSubmitService {
+public class AnswerService {
 
     private final ProblemRepository problemRepository;
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
-    private final ReviewKafkaProducer reviewKafkaProducer;
+    private final ReviewRequestKafkaProducer reviewRequestKafkaProducer;
 
     public void submit(AnswerSubmitRequest request) {
         Problem problem = problemRepository.findById(request.getProblemId())
@@ -34,7 +34,7 @@ public class AnswerSubmitService {
 
         Answer answer = Answer.builder()
                 .user(user)
-                .problemId(request.getProblemId())
+                .problemId(problem.getId())
                 .imgSolution(request.getAnswerImgUrl())
                 .status(AnswerStatus.PENDING_REVIEW)
                 .submittedAt(LocalDateTime.now())
@@ -42,11 +42,12 @@ public class AnswerSubmitService {
 
         answerRepository.save(answer);
 
-        GptReviewRequest payload = new GptReviewRequest(
-                request.getAnswerImgUrl(),
-                problem.getSolutionImageUrls()
-        );
+        Optional.ofNullable(problem.getSolutionImageUrl())
+                .ifPresent(request::setSolutionImgUrl);
 
-        reviewKafkaProducer.sendReviewRequest(payload);
+        Optional.ofNullable(request.getAnswerImgUrl())
+                .ifPresent(request::setAnswerImgUrl);
+
+        reviewRequestKafkaProducer.sendReviewRequest(request);
     }
 }

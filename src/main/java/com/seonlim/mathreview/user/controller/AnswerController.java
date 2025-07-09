@@ -1,22 +1,24 @@
 package com.seonlim.mathreview.user.controller;
 
-import com.seonlim.mathreview.user.dto.controller.AnswerSubmitRequest;
-import com.seonlim.mathreview.user.service.AnswerSubmitService;
+import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
+import com.seonlim.mathreview.user.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/answers")
 @RequiredArgsConstructor
 public class AnswerController {
 
-    private final AnswerSubmitService answerSubmitService;
+    private final AnswerService answerService;
 
-    @PostMapping
+    @PostMapping("/submit-test")
     public ResponseEntity<Void> submitAnswer(@RequestBody AnswerSubmitRequest request) {
-        answerSubmitService.submit();
-        return answerSubmitService.submitAnswer(answer);
+        answerService.submit(request);
+        return ResponseEntity.ok().build();
     }
 }

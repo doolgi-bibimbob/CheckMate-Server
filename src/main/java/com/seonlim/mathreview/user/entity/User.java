@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "\"user\"")  // 큰따옴표로 감싸기
 public class User {
     @Id
     @GeneratedValue
