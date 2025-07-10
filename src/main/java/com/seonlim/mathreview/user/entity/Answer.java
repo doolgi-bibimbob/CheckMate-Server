@@ -28,6 +28,8 @@ public class Answer {
 
     private LocalDateTime submittedAt;
 
+    private Long answer;
+
     private int likeCount;
 
     @Enumerated(EnumType.STRING)

@@ -10,10 +10,10 @@ import com.seonlim.mathreview.user.kafka.producer.ReviewRequestKafkaProducer;
 import com.seonlim.mathreview.user.repository.AnswerRepository;
 import com.seonlim.mathreview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -54,6 +54,14 @@ public class AnswerService {
         Optional.ofNullable(request.getAnswerImgUrl())
                 .ifPresent(request::setAnswerImgUrl);
 
+        validateAnswer(request.getAnswer(), problem);
+
         reviewRequestKafkaProducer.sendReviewRequest(request);
+    }
+
+    private void validateAnswer(Long userAnswer, Problem problem) {
+        boolean isCorrect = Objects.equals(userAnswer, problem.getAnswer());
+        problem.recordSubmission(isCorrect);
+        problemRepository.save(problem);
     }
 }

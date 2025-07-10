@@ -30,4 +30,21 @@ public class Problem {
     private String problemImageUrl;
 
     private String content;
+
+    private Long submissionCount = 0L;
+
+    private Long correctSubmissionCount = 0L;
+
+    private Long answer;
+
+    public double getAccuracyRate() {
+        return submissionCount > 0
+                ? (correctSubmissionCount * 100.0) / submissionCount
+                : 0.0;
+    }
+
+    public void recordSubmission(boolean isCorrect) {
+        submissionCount++;
+        if (isCorrect) correctSubmissionCount++;
+    }
 }

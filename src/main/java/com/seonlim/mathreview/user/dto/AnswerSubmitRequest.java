@@ -14,4 +14,5 @@ public class AnswerSubmitRequest {
     private String problemImgUrl;
     private String answerImgUrl;
     private String solutionImgUrl;
+    private Long answer;
 }
