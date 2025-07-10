@@ -27,6 +27,7 @@ public class Review {
     @Enumerated(EnumType.STRING)
     private ReviewerType reviewerType;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private int rating;
