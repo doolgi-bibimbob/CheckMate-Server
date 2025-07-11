@@ -26,6 +26,10 @@ public class Answer {
 
     private String imgSolution;
 
+    @ElementCollection
+    @CollectionTable(name = "answer_img_solutions", joinColumns = @JoinColumn(name = "answer_id"))
+    private List<String> answerImgSolutions = new ArrayList<>();
+
     private LocalDateTime submittedAt;
 
     private Long answer;

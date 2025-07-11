@@ -3,6 +3,7 @@ package com.seonlim.mathreview.user.service;
 import com.seonlim.mathreview.problem.entity.Problem;
 import com.seonlim.mathreview.problem.repository.ProblemRepository;
 import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
+import com.seonlim.mathreview.user.dto.AnswerSubmitRequestListTest;
 import com.seonlim.mathreview.user.entity.Answer;
 import com.seonlim.mathreview.user.entity.AnswerStatus;
 import com.seonlim.mathreview.user.entity.User;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -63,5 +65,33 @@ public class AnswerService {
         boolean isCorrect = Objects.equals(userAnswer, problem.getAnswer());
         problem.recordSubmission(isCorrect);
         problemRepository.save(problem);
+    }
+
+    public void submitListTest(AnswerSubmitRequestListTest request) {
+        Problem problem = problemRepository.findById(request.getProblemId())
+                .orElseThrow(() -> new IllegalArgumentException("문제 ID가 유효하지 않습니다: " + request.getProblemId()));
+
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+
+        Answer answer = Answer.builder()
+                .user(user)
+                .problemId(problem.getId())
+                .answerImgSolutions(request.getAnswerImgUrls())
+                .status(AnswerStatus.PENDING_REVIEW)
+                .submittedAt(LocalDateTime.now())
+                .build();
+
+        answerRepository.save(answer);
+
+        request.setAnswerId(answer.getId());
+        request.setProblemImgUrl(problem.getProblemImageUrl());
+        request.setSolutionImgUrls(problem.getSolutionImageUrl() != null
+                ? List.of(problem.getSolutionImageUrl())
+                : List.of());
+
+        validateAnswer(request.getAnswer(), problem);
+
+        reviewRequestKafkaProducer.sendReviewRequestTest(request);
     }
 }

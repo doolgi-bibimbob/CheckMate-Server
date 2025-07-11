@@ -61,4 +61,39 @@ public class GptReviewResultConsumer {
                 });
     }
 
+    @KafkaListener(topics = "gpt-review-results-test", groupId = "review-result-consumer")
+    public void consumeTest(String message) {
+        Optional.ofNullable(message)
+                .map(msg -> {
+                    try {
+                        return objectMapper.readValue(msg, GptReviewResponse.class);
+                    } catch (IOException e) {
+                        throw new RuntimeException("❌ JSON 파싱 실패: " + e.getMessage(), e);
+                    }
+                })
+                .ifPresentOrElse(response -> {
+                    log.info("✅ Gpt Review Result: {}", response);
+                    Answer answer = answerRepository.findById(response.getAnswerId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 answerId를 찾을 수 없습니다: " + response.getAnswerId()));
+
+                    answer.setStatus(AnswerStatus.REVIEWED);
+                    answerRepository.save(answer);
+
+                    Review review = Review.builder()
+                            .answer(answer)
+                            .reviewer(null)
+                            .reviewerType(ReviewerType.AI)
+                            .content(response.getReviewResult())
+                            .rating(0)
+                            .createdAt(LocalDateTime.now())
+                            .build();
+
+                    reviewRepository.save(review);
+
+                    log.info("✅ Review 저장 완료: {}", review);
+                }, () -> {
+                    log.error("❌ 메시지가 비어있거나 null입니다.");
+                });
+    }
+
 }

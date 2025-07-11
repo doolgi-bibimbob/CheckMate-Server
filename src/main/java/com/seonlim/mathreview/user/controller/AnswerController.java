@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.user.controller;
 
 import com.seonlim.mathreview.user.dto.AnswerSubmitRequest;
+import com.seonlim.mathreview.user.dto.AnswerSubmitRequestListTest;
 import com.seonlim.mathreview.user.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,12 @@ public class AnswerController {
     @PostMapping("/submit-test")
     public ResponseEntity<Void> submitAnswer(@RequestBody AnswerSubmitRequest request) {
         answerService.submit(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/submit-test-list")
+    public ResponseEntity<Void> submitAnswerListTest(@RequestBody AnswerSubmitRequestListTest request) {
+        answerService.submitListTest(request);
         return ResponseEntity.ok().build();
     }
 }

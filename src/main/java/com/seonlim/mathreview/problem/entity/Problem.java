@@ -29,6 +29,10 @@ public class Problem {
 
     private String problemImageUrl;
 
+    @ElementCollection
+    @CollectionTable(name = "problem_img_solutions", joinColumns = @JoinColumn(name = "problem_id"))
+    private List<String> problemImgSolutions = new ArrayList<>();
+
     private String content;
 
     private Long submissionCount = 0L;
@@ -36,6 +40,8 @@ public class Problem {
     private Long correctSubmissionCount = 0L;
 
     private Long answer;
+
+    private String title;
 
     public double getAccuracyRate() {
         return submissionCount > 0
