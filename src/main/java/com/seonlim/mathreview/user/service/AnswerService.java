@@ -61,7 +61,7 @@ public class AnswerService {
         reviewRequestKafkaProducer.sendReviewRequest(request);
     }
 
-    private void validateAnswer(Long userAnswer, Problem problem) {
+    void validateAnswer(Long userAnswer, Problem problem) {
         boolean isCorrect = Objects.equals(userAnswer, problem.getAnswer());
         problem.recordSubmission(isCorrect);
         problemRepository.save(problem);
@@ -86,9 +86,11 @@ public class AnswerService {
 
         request.setAnswerId(answer.getId());
         request.setProblemImgUrl(problem.getProblemImageUrl());
-        request.setSolutionImgUrls(problem.getSolutionImageUrl() != null
-                ? List.of(problem.getSolutionImageUrl())
-                : List.of());
+        Optional.ofNullable(problem.getSolutionImageUrl())
+                .ifPresentOrElse(
+                        url -> request.setSolutionImgUrls(List.of(url)),
+                        () -> request.setSolutionImgUrls(List.of())
+                );
 
         validateAnswer(request.getAnswer(), problem);
 
