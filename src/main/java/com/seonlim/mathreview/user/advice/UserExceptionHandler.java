@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
+public class UserExceptionHandler {
     @ExceptionHandler(VerificationException.class)
     public ResponseEntity<String> handleVerificationError(VerificationException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ " + ex.getMessage());
