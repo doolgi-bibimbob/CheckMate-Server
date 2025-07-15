@@ -2,9 +2,11 @@ package com.seonlim.mathreview.user.service;
 
 import com.seonlim.mathreview.user.dto.RegisterRequest;
 import com.seonlim.mathreview.user.entity.User;
+import com.seonlim.mathreview.user.entity.UserType;
 import com.seonlim.mathreview.user.exception.VerificationException;
 import com.seonlim.mathreview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class AuthService {
     private final EmailVerificationService emailVerificationService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void sendVerificationCode(String email) {
         emailVerificationService.sendCode(email);
@@ -33,7 +36,8 @@ public class AuthService {
                     User user = User.builder()
                             .email(email)
                             .username(request.username())
-                            .password(request.password())
+                            .password(passwordEncoder.encode(request.password()))
+                            .userType(UserType.STUDENT)
                             .build();
                     return Optional.of(user);
                 })

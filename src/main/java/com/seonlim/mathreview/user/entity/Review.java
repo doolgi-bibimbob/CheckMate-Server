@@ -2,8 +2,11 @@ package com.seonlim.mathreview.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,11 +19,11 @@ public class Review {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "amswer_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "answer_id")
     private Answer answer;
 
-    @ManyToOne(optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewer_id")
     private User reviewer;
 
@@ -32,5 +35,11 @@ public class Review {
 
     private int rating;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "review",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ReviewAnnotation> annotations = new ArrayList<>();
 }

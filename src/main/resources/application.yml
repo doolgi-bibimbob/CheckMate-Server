@@ -37,3 +37,10 @@ spring:
           starttls:
             enable: true
 
+  logging:
+    level:
+      org.springframework.security.web.authentication: DEBUG
+jwt:
+  secret: "base64:vW/PTau3eU0v0KakO3DQe+ORRWqEhCNDkWqERCqTSbs="
+  expiration: 3600000
+

@@ -26,4 +26,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 }

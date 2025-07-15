@@ -47,6 +47,25 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.projectlombok:lombok'
+
+	/* ── Spring Security ──────────────────────────────────── */
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	/* 필요 시: 리소스 서버(JWT 검증) + JOSE 암복호화 */
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	/* JJWT BOM ↛ jjwt-root 사용 */
+	implementation platform('io.jsonwebtoken:jjwt-root:0.12.6')
+
+	/* 컴파일 타임 */
+	implementation 'io.jsonwebtoken:jjwt-api'
+
+	/* 런타임 */
+	runtimeOnly   'io.jsonwebtoken:jjwt-impl'
+	runtimeOnly   'io.jsonwebtoken:jjwt-jackson'
+
 }
 
 tasks.named('test') {
