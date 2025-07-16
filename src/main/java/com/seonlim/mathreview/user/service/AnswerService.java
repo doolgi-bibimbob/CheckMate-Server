@@ -36,7 +36,7 @@ public class AnswerService {
 
         Answer answer = Answer.builder()
                 .user(user)
-                .problemId(problem.getId())
+                .problem(problem)
                 .imgSolution(request.getAnswerImgUrl())
                 .status(AnswerStatus.PENDING_REVIEW)
                 .submittedAt(LocalDateTime.now())
@@ -76,7 +76,7 @@ public class AnswerService {
 
         Answer answer = Answer.builder()
                 .user(user)
-                .problemId(problem.getId())
+                .problem(problem)
                 .answerImgSolutions(request.getAnswerImgUrls())
                 .status(AnswerStatus.PENDING_REVIEW)
                 .submittedAt(LocalDateTime.now())

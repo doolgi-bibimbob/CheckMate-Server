@@ -1,5 +1,6 @@
 package com.seonlim.mathreview.user.entity;
 
+import com.seonlim.mathreview.problem.entity.Problem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,9 @@ public class Answer {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Long problemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_id", nullable = false)
+    private Problem problem;
 
     private String imgSolution;
 
