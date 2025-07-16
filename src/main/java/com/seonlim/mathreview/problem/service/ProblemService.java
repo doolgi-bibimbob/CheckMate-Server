@@ -1,5 +1,6 @@
 package com.seonlim.mathreview.problem.service;
 
+import com.seonlim.mathreview.problem.dto.ProblemDetail;
 import com.seonlim.mathreview.problem.dto.ProblemFilterRequest;
 import com.seonlim.mathreview.problem.dto.ProblemFilterResponse;
 import com.seonlim.mathreview.problem.entity.Exam;
@@ -37,5 +38,11 @@ public class ProblemService {
         List<Answer> answers = answerRepository.findByProblemId(problemId);
 
         return problem;
+    }
+
+    public ProblemDetail getProblemDetail(Long problemId) {
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new IllegalArgumentException("❌ 문제 ID가 유효하지 않습니다: " + problemId));
+        return ProblemDetail.from(problem);
     }
 }
