@@ -9,6 +9,7 @@ import com.seonlim.mathreview.user.dto.VerifyCodeRequest;
 import com.seonlim.mathreview.user.entity.User;
 import com.seonlim.mathreview.user.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -42,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> signup(@Valid @RequestBody RegisterRequest request) {
         User user = authService.signup(request);
         return ResponseEntity.ok("✅ 회원가입 성공! ID=" + user.getId());
     }
