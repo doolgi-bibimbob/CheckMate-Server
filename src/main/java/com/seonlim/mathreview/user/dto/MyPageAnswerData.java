@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public record MyPageAnswerData(
         Long answerId,
-        Long problemId,
+        String problemTitle,
         int likeCount,
         LocalDateTime submittedAt,
         AnswerStatus status
@@ -15,7 +15,7 @@ public record MyPageAnswerData(
     public static MyPageAnswerData from(Answer a) {
         return new MyPageAnswerData(
                 a.getId(),
-                a.getProblem().getId(),
+                a.getProblem().getTitle(),
                 a.getLikeCount(),
                 a.getSubmittedAt(),
                 a.getStatus()
