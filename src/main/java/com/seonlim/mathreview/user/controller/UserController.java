@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.user.controller;
 
 import com.seonlim.mathreview.user.dto.MyPageAnswerData;
+import com.seonlim.mathreview.user.dto.MyPageReviewData;
 import com.seonlim.mathreview.user.dto.MyPageUserData;
 import com.seonlim.mathreview.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // my-page/answer-data
     @GetMapping("my-page/answer-data")
     public List<MyPageAnswerData> getUserAnswers(@RequestParam Long userId) {
         return userService.getMyPageAnswerData(userId);
     }
 
-    // my-page/review-data
+    @GetMapping("my-page/review-data")
+    public ResponseEntity<List<MyPageReviewData>> getUserReviewData(@RequestParam Long userId) {
+        List<MyPageReviewData> response = userService.getMyPageReviewData(userId);
+        return ResponseEntity.ok(response);
+    }
 }

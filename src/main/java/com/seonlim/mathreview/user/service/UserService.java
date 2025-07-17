@@ -1,8 +1,10 @@
 package com.seonlim.mathreview.user.service;
 
 import com.seonlim.mathreview.user.dto.MyPageAnswerData;
+import com.seonlim.mathreview.user.dto.MyPageReviewData;
 import com.seonlim.mathreview.user.dto.MyPageUserData;
 import com.seonlim.mathreview.user.repository.AnswerRepository;
+import com.seonlim.mathreview.user.repository.ReviewRepository;
 import com.seonlim.mathreview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
+    private final ReviewRepository reviewRepository;
 
     public MyPageUserData getMyPageUserData(Long userId) {
         return userRepository.findById(userId)
@@ -33,5 +36,10 @@ public class UserService {
                                 "No answers found for user with id: " + userId));
     }
 
-
+    public List<MyPageReviewData> getMyPageReviewData(Long userId) {
+        return reviewRepository.findAllByReviewerId(userId)
+                .stream()
+                .map(MyPageReviewData::from)
+                .toList();
+    }
 }
