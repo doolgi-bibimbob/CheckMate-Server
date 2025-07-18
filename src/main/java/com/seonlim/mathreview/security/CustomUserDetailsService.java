@@ -1,6 +1,6 @@
 package com.seonlim.mathreview.security;
 
-import com.seonlim.mathreview.user.repository.UserRepository;
+import com.seonlim.mathreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

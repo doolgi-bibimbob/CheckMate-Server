@@ -1,8 +1,9 @@
 package com.seonlim.mathreview.problem.service;
 
-import com.seonlim.mathreview.problem.dto.ProblemFilterRequest;
-import com.seonlim.mathreview.problem.dto.ProblemFilterResponse;
-import com.seonlim.mathreview.problem.repository.ProblemRepository;
+import com.seonlim.mathreview.dto.ProblemFilterRequest;
+import com.seonlim.mathreview.dto.ProblemFilterResponse;
+import com.seonlim.mathreview.repository.ProblemRepository;
+import com.seonlim.mathreview.service.ProblemService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

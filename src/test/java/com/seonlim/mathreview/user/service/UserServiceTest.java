@@ -1,15 +1,16 @@
 package com.seonlim.mathreview.user.service;
 
-import com.seonlim.mathreview.problem.entity.Problem;
-import com.seonlim.mathreview.user.dto.MyPageAnswerData;
-import com.seonlim.mathreview.user.dto.MyPageReviewData;
-import com.seonlim.mathreview.user.dto.MyPageUserData;
-import com.seonlim.mathreview.user.entity.Answer;
-import com.seonlim.mathreview.user.entity.Review;
-import com.seonlim.mathreview.user.entity.User;
-import com.seonlim.mathreview.user.repository.AnswerRepository;
-import com.seonlim.mathreview.user.repository.ReviewRepository;
-import com.seonlim.mathreview.user.repository.UserRepository;
+import com.seonlim.mathreview.entity.Problem;
+import com.seonlim.mathreview.dto.MyPageAnswerData;
+import com.seonlim.mathreview.dto.MyPageReviewData;
+import com.seonlim.mathreview.dto.MyPageUserData;
+import com.seonlim.mathreview.entity.Answer;
+import com.seonlim.mathreview.entity.Review;
+import com.seonlim.mathreview.entity.User;
+import com.seonlim.mathreview.repository.AnswerRepository;
+import com.seonlim.mathreview.repository.ReviewRepository;
+import com.seonlim.mathreview.repository.UserRepository;
+import com.seonlim.mathreview.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +23,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

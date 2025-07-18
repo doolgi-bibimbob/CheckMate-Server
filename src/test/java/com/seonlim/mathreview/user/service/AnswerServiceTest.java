@@ -1,13 +1,14 @@
 package com.seonlim.mathreview.user.service;
 
-import com.seonlim.mathreview.problem.entity.Problem;
-import com.seonlim.mathreview.problem.repository.ProblemRepository;
-import com.seonlim.mathreview.user.dto.AnswerSubmitRequestListTest;
-import com.seonlim.mathreview.user.entity.Answer;
-import com.seonlim.mathreview.user.entity.User;
-import com.seonlim.mathreview.user.kafka.producer.ReviewRequestKafkaProducer;
-import com.seonlim.mathreview.user.repository.AnswerRepository;
-import com.seonlim.mathreview.user.repository.UserRepository;
+import com.seonlim.mathreview.entity.Problem;
+import com.seonlim.mathreview.repository.ProblemRepository;
+import com.seonlim.mathreview.dto.AnswerSubmitRequestListTest;
+import com.seonlim.mathreview.entity.Answer;
+import com.seonlim.mathreview.entity.User;
+import com.seonlim.mathreview.kafka.producer.ReviewRequestKafkaProducer;
+import com.seonlim.mathreview.repository.AnswerRepository;
+import com.seonlim.mathreview.repository.UserRepository;
+import com.seonlim.mathreview.service.AnswerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static com.seonlim.mathreview.problem.entity.QProblem.problem;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;

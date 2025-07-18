@@ -1,6 +1,6 @@
 package com.seonlim.mathreview.security;
 
-import com.seonlim.mathreview.user.entity.User;
+import com.seonlim.mathreview.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
