@@ -16,18 +16,18 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("my-page/user-data")
+    @GetMapping("/my-page/user-data")
     public ResponseEntity<MyPageUserData> getMyPageUserData(@RequestParam Long userId) {
         MyPageUserData response = userService.getMyPageUserData(userId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("my-page/answer-data")
+    @GetMapping("/my-page/answer-data")
     public List<MyPageAnswerData> getUserAnswers(@RequestParam Long userId) {
         return userService.getMyPageAnswerData(userId);
     }
 
-    @GetMapping("my-page/review-data")
+    @GetMapping("/my-page/review-data")
     public ResponseEntity<List<MyPageReviewData>> getUserReviewData(@RequestParam Long userId) {
         List<MyPageReviewData> response = userService.getMyPageReviewData(userId);
         return ResponseEntity.ok(response);
