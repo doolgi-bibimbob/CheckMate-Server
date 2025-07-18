@@ -61,7 +61,7 @@ public class AnswerService {
         reviewRequestKafkaProducer.sendReviewRequest(request);
     }
 
-    void validateAnswer(Long userAnswer, Problem problem) {
+    public void validateAnswer(Long userAnswer, Problem problem) {
         boolean isCorrect = Objects.equals(userAnswer, problem.getAnswer());
         problem.recordSubmission(isCorrect);
         problemRepository.save(problem);
