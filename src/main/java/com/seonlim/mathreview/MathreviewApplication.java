@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan(basePackages = {
-		"com.seonlim.mathreview.user.entity",
-		"com.seonlim.mathreview.problem.entity"
-})
+//@EntityScan(basePackages = {
+//		"com.seonlim.mathreview.user.entity",
+//		"com.seonlim.mathreview.problem.entity"
+//})
 public class MathreviewApplication {
 
 	public static void main(String[] args) {

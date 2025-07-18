@@ -2,9 +2,9 @@ package com.seonlim.mathreview.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.seonlim.mathreview.dto.ProblemFilterResponse;
-import com.seonlim.mathreview.problem.entity.QExam;
-import com.seonlim.mathreview.problem.entity.QProblem;
-import com.seonlim.mathreview.problem.entity.QTag;
+import com.seonlim.mathreview.entity.QExam;
+import com.seonlim.mathreview.entity.QProblem;
+import com.seonlim.mathreview.entity.QTag;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
