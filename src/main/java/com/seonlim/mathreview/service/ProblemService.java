@@ -9,6 +9,8 @@ import com.seonlim.mathreview.repository.ProblemRepository;
 import com.seonlim.mathreview.entity.Answer;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +21,14 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final AnswerRepository answerRepository;
 
-    public List<ProblemFilterResponse> getFilteredProblems(ProblemFilterRequest request) {
+    public Page<ProblemFilterResponse> getFilteredProblems(ProblemFilterRequest request, Pageable pageable) {
         return problemRepository.filterProblems(
                 request.title(),
                 request.year(),
                 request.tagName(),
-                request.minAccuracyRate()
+                request.minAccuracyRate(),
+                request.maxAccuracyRate(),
+                pageable
         );
     }
 

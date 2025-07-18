@@ -5,10 +5,11 @@ import com.seonlim.mathreview.dto.ProblemFilterRequest;
 import com.seonlim.mathreview.dto.ProblemFilterResponse;
 import com.seonlim.mathreview.service.ProblemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +19,10 @@ public class ProblemController {
     private final ProblemService problemService;
 
     @PostMapping("/filter")
-    public ResponseEntity<List<ProblemFilterResponse>> filterProblems(ProblemFilterRequest request) {
-        List<ProblemFilterResponse> result = problemService.getFilteredProblems(request);
+    public ResponseEntity<Page<ProblemFilterResponse>> filterProblems(
+            @RequestBody ProblemFilterRequest request,
+            @PageableDefault(size = 20, sort = "id") Pageable pageable) {
+        Page<ProblemFilterResponse> result = problemService.getFilteredProblems(request, pageable);
         return ResponseEntity.ok(result);
     }
 

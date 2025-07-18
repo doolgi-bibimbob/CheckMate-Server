@@ -4,5 +4,6 @@ public record ProblemFilterRequest(
         String title,
         Integer year,
         String tagName,
-        Double minAccuracyRate
+        Double  minAccuracyRate,
+        Double  maxAccuracyRate
 ) {}
