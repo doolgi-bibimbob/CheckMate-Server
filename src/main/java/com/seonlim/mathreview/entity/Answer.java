@@ -40,5 +40,8 @@ public class Answer {
 
     @Enumerated(EnumType.STRING)
     private AnswerStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private AnswerStatus reviewStatus;
 }
 

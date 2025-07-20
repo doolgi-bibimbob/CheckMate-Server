@@ -37,9 +37,9 @@ public record AnswerDetail(
                 userReviews
         );
     }
-    public record AiReview(Long id, String content, int rating, LocalDateTime createdAt) {
+    public record AiReview(Long id, String content, LocalDateTime createdAt) {
         public static AiReview from(Review r) {
-            return new AiReview(r.getId(), r.getContent(), r.getRating(), r.getCreatedAt());
+            return new AiReview(r.getId(), r.getAiReviewContent(), r.getCreatedAt());
         }
     }
 

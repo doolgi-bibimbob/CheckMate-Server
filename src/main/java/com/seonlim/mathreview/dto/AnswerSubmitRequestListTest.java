@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerSubmitRequestListTest {
-    private Long userId;
+//    private Long userId;
     private Long problemId;
     private Long answerId;
     private String problemImgUrl;

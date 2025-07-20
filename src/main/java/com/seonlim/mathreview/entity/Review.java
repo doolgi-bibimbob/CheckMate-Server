@@ -31,9 +31,9 @@ public class Review {
     private ReviewerType reviewerType;
 
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String aiReviewContent;
 
-    private int rating;
+//    private int rating;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -9,9 +9,12 @@ import com.seonlim.mathreview.kafka.producer.ReviewRequestKafkaProducer;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import com.seonlim.mathreview.repository.ReviewRepository;
 import com.seonlim.mathreview.repository.UserRepository;
+import com.seonlim.mathreview.security.CustomUserDetails;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -69,12 +72,16 @@ public class AnswerService {
         problemRepository.save(problem);
     }
 
+    @Transactional
     public void submitListTest(AnswerSubmitRequestListTest request) {
         Problem problem = problemRepository.findById(request.getProblemId())
-                .orElseThrow(() -> new IllegalArgumentException("문제 ID가 유효하지 않습니다: " + request.getProblemId()));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "문제 ID가 유효하지 않습니다: " + request.getProblemId()));
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        User user = principal.getDomain();
 
         Answer answer = Answer.builder()
                 .user(user)
@@ -83,7 +90,6 @@ public class AnswerService {
                 .status(AnswerStatus.PENDING_REVIEW)
                 .submittedAt(LocalDateTime.now())
                 .build();
-
         answerRepository.save(answer);
 
         request.setAnswerId(answer.getId());
@@ -91,11 +97,10 @@ public class AnswerService {
         Optional.ofNullable(problem.getSolutionImageUrl())
                 .ifPresentOrElse(
                         url -> request.setSolutionImgUrls(List.of(url)),
-                        () -> request.setSolutionImgUrls(List.of())
+                        ()  -> request.setSolutionImgUrls(List.of())
                 );
 
         validateAnswer(request.getAnswer(), problem);
-
         reviewRequestKafkaProducer.sendReviewRequestTest(request);
     }
 

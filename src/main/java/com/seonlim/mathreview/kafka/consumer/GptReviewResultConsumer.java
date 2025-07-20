@@ -48,8 +48,8 @@ public class GptReviewResultConsumer {
                             .answer(answer)
                             .reviewer(null)
                             .reviewerType(ReviewerType.AI)
-                            .content(response.getReviewResult())
-                            .rating(0)
+                            .aiReviewContent(response.getReviewResult())
+//                            .rating(0)
                             .createdAt(LocalDateTime.now())
                             .build();
 
@@ -76,15 +76,15 @@ public class GptReviewResultConsumer {
                     Answer answer = answerRepository.findById(response.getAnswerId())
                             .orElseThrow(() -> new IllegalArgumentException("해당 answerId를 찾을 수 없습니다: " + response.getAnswerId()));
 
-                    answer.setStatus(AnswerStatus.REVIEWED);
+                    answer.setReviewStatus(AnswerStatus.REVIEWED);
                     answerRepository.save(answer);
 
                     Review review = Review.builder()
                             .answer(answer)
                             .reviewer(null)
                             .reviewerType(ReviewerType.AI)
-                            .content(response.getReviewResult())
-                            .rating(0)
+                            .aiReviewContent(response.getReviewResult())
+//                            .rating(0)
                             .createdAt(LocalDateTime.now())
                             .build();
 
