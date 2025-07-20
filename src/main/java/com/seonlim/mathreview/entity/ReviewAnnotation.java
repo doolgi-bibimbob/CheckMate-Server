@@ -3,14 +3,18 @@ package com.seonlim.mathreview.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ReviewAnnotation {
+    // 리뷰 내용은 텍스트면 content 이미지면 imageUrl
     @Id
     @GeneratedValue
     private Long id;
@@ -19,6 +23,8 @@ public class ReviewAnnotation {
     private Answer answer;
 
     private String imageUrl;
+
+    private Long index;
 
     @Column(columnDefinition = "TEXT")
     private String content;

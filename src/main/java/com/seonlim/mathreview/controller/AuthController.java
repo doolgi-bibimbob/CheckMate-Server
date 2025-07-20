@@ -4,10 +4,12 @@ import com.seonlim.mathreview.dto.Login;
 import com.seonlim.mathreview.dto.RegisterRequest;
 import com.seonlim.mathreview.dto.SendCodeRequest;
 import com.seonlim.mathreview.dto.VerifyCodeRequest;
+import com.seonlim.mathreview.security.CustomUserDetails;
 import com.seonlim.mathreview.security.JwtCookieAuthenticationFilter;
 import com.seonlim.mathreview.security.JwtTokenProvider;
 import com.seonlim.mathreview.entity.User;
 import com.seonlim.mathreview.service.AuthService;
+import com.seonlim.mathreview.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -28,6 +31,7 @@ public class AuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+    private final UserService userService;
     private static final String COOKIE = JwtCookieAuthenticationFilter.COOKIE_NAME;
 
     @PostMapping("/send-code")
@@ -69,6 +73,13 @@ public class AuthController {
         ResponseCookie expire = ResponseCookie.from(COOKIE, "")
                 .httpOnly(true).secure(true).path("/").maxAge(0).build();
         res.addHeader(HttpHeaders.SET_COOKIE, expire.toString());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/delete-user")
+    public ResponseEntity<Void> deleteUser(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.deleteUser(userDetails.getDomain().getId());
         return ResponseEntity.ok().build();
     }
 }

@@ -46,6 +46,11 @@ public class ProblemService {
     public ProblemDetail getProblemDetail(Long problemId) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new IllegalArgumentException("❌ 문제 ID가 유효하지 않습니다: " + problemId));
-        return ProblemDetail.from(problem);
+
+        List<Answer> latestAnswer = answerRepository.findByProblemId(problemId)
+                .stream()
+                .sorted((a1, a2) -> a2.getSubmittedAt().compareTo(a1.getSubmittedAt()))
+                .toList();
+        return ProblemDetail.from(problem, latestAnswer);
     }
 }

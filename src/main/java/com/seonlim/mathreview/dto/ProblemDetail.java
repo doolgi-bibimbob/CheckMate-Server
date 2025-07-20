@@ -1,5 +1,6 @@
 package com.seonlim.mathreview.dto;
 
+import com.seonlim.mathreview.entity.Answer;
 import com.seonlim.mathreview.entity.Problem;
 import com.seonlim.mathreview.entity.Tag;
 
@@ -17,10 +18,11 @@ public record ProblemDetail(
         Long correctSubmissionCount,
         double accuracyRate,
         Long answer,
-        List<TagSummary> tags
+        List<TagSummary> tags,
+        List<AnswerSummary> answers
 ) {
 
-    public static ProblemDetail from(Problem p) {
+    public static ProblemDetail from(Problem p, List<Answer> answers) {
         return new ProblemDetail(
                 p.getId(),
                 p.getExam() != null ? p.getExam().getId() : null,
@@ -35,6 +37,9 @@ public record ProblemDetail(
                 p.getAnswer(),
                 p.getTags().stream()
                         .map(TagSummary::from)
+                        .toList(),
+                answers.stream()
+                        .map(AnswerSummary::from)
                         .toList()
         );
     }

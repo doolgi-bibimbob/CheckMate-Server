@@ -9,4 +9,6 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     @EntityGraph(attributePaths = { "answer.user", "answer.problem" })
     List<Review> findAllByReviewerId(Long reviewerId);
+
+    List<Review> findByAnswerId(Long answerId);
 }

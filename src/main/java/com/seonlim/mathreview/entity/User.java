@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "\"user\"")  // 큰따옴표로 감싸기
+@Table(name = "\"user\"")
 public class User {
     @Id
     @GeneratedValue

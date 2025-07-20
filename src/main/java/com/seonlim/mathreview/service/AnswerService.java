@@ -1,19 +1,20 @@
 package com.seonlim.mathreview.service;
 
-import com.seonlim.mathreview.entity.Problem;
+import com.seonlim.mathreview.dto.AnswerDetail;
+import com.seonlim.mathreview.entity.*;
 import com.seonlim.mathreview.repository.ProblemRepository;
 import com.seonlim.mathreview.dto.AnswerSubmitRequest;
 import com.seonlim.mathreview.dto.AnswerSubmitRequestListTest;
-import com.seonlim.mathreview.entity.Answer;
-import com.seonlim.mathreview.entity.AnswerStatus;
-import com.seonlim.mathreview.entity.User;
 import com.seonlim.mathreview.kafka.producer.ReviewRequestKafkaProducer;
 import com.seonlim.mathreview.repository.AnswerRepository;
+import com.seonlim.mathreview.repository.ReviewRepository;
 import com.seonlim.mathreview.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class AnswerService {
     private final ProblemRepository problemRepository;
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
+    private final ReviewRepository reviewRepository;
     private final ReviewRequestKafkaProducer reviewRequestKafkaProducer;
 
     public void submit(AnswerSubmitRequest request) {
@@ -95,5 +97,29 @@ public class AnswerService {
         validateAnswer(request.getAnswer(), problem);
 
         reviewRequestKafkaProducer.sendReviewRequestTest(request);
+    }
+
+    public AnswerDetail getAnswerDetail(Long answerId) {
+        Answer answer = answerRepository.findByIdFetch(answerId)
+                .orElseThrow(() -> new EntityNotFoundException("answer not found: " + answerId));
+
+        List<Review> reviews = reviewRepository.findByAnswerId(answerId);
+
+        Review ai = null;
+        List<AnswerDetail.UserReviewSummary> userSummaries = new ArrayList<>();
+
+        for (Review r : reviews) {
+            if (r.getReviewerType() == ReviewerType.AI) {
+                ai = r;
+            } else {
+                userSummaries.add(AnswerDetail.UserReviewSummary.from(r));
+            }
+        }
+
+        return AnswerDetail.of(
+                answer,
+                ai != null ? AnswerDetail.AiReview.from(ai) : null,
+                userSummaries
+        );
     }
 }
