@@ -83,11 +83,17 @@ public class AnswerService {
                 .getPrincipal();
         User user = principal.getDomain();
 
+        boolean isCorrect = Objects.equals(request.getAnswer(), problem.getAnswer());
+        AnswerStatus status = isCorrect ? AnswerStatus.CORRECT : AnswerStatus.INCORRECT;
+
+        problem.recordSubmission(isCorrect);
+        problemRepository.save(problem);
+
         Answer answer = Answer.builder()
                 .user(user)
                 .problem(problem)
                 .answerImgSolutions(request.getAnswerImgUrls())
-                .status(AnswerStatus.PENDING_REVIEW)
+                .status(status)
                 .submittedAt(LocalDateTime.now())
                 .build();
         answerRepository.save(answer);
@@ -100,7 +106,6 @@ public class AnswerService {
                         ()  -> request.setSolutionImgUrls(List.of())
                 );
 
-        validateAnswer(request.getAnswer(), problem);
         reviewRequestKafkaProducer.sendReviewRequestTest(request);
     }
 

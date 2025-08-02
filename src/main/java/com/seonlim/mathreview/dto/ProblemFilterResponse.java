@@ -8,6 +8,7 @@ public record ProblemFilterResponse(
         int year,
         String examName,
         List<String> tagNames,
-        double accuracyRate
+        double accuracyRate,
+        boolean solved
 ) {
 }

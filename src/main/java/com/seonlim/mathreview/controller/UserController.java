@@ -1,11 +1,9 @@
 package com.seonlim.mathreview.controller;
 
-import com.seonlim.mathreview.dto.MyPageAnswerData;
-import com.seonlim.mathreview.dto.MyPageProfileUpdateRequest;
-import com.seonlim.mathreview.dto.MyPageReviewData;
-import com.seonlim.mathreview.dto.MyPageUserData;
+import com.seonlim.mathreview.dto.*;
 import com.seonlim.mathreview.security.CustomUserDetails;
 import com.seonlim.mathreview.service.UserService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,15 +51,11 @@ public class UserController {
 
     @PostMapping("/my-page/password-update")
     public ResponseEntity<Void> updateUserPassword(
-
-            @Pattern(
-                    regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[\\W_]).{8,20}$",
-                    message = "비밀번호는 영문자·숫자·특수문자를 모두 포함해 8~20자여야 합니다."
-            )
-            @RequestBody String newPassword,
-
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        userService.updatePassword(newPassword, userDetails.getDomain().getId());
+            @RequestBody @Valid PasswordUpdateRequest req,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        userService.updatePassword(req.newPassword(), userDetails.getDomain().getId());
         return ResponseEntity.ok().build();
     }
+
 }

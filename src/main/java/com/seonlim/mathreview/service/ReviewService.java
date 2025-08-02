@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.service;
 
 import com.seonlim.mathreview.dto.CreateReviewRequest;
+import com.seonlim.mathreview.dto.ReviewDetail;
 import com.seonlim.mathreview.entity.*;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import com.seonlim.mathreview.repository.ReviewAnnotationRepository;
@@ -49,7 +50,7 @@ public class ReviewService {
                             .imageUrl(dto.imageUrl())
                             .index(dto.index())
                             .content(dto.content())
-                            .position(new Position(dto.position().x(), dto.position().y()))
+                            .position(new Position(dto.position().getX(), dto.position().getY()))
                             .width(dto.width())
                             .height(dto.height())
                             .build();
@@ -59,6 +60,12 @@ public class ReviewService {
                 .toList();
 
         annotationRepository.saveAll(annotations);
+    }
+
+    public ReviewDetail getReviewDetail(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰 ID: " + reviewId));
+        return ReviewDetail.from(review);
     }
 
 }

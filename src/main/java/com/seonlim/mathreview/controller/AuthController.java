@@ -61,7 +61,7 @@ public class AuthController {
         String jwt = tokenProvider.generateToken(auth);
 
         ResponseCookie cookie = ResponseCookie.from(COOKIE, jwt)
-                .httpOnly(true).secure(true).sameSite("Lax")
+                .httpOnly(true).secure(true).sameSite("None")
                 .path("/").maxAge(Duration.ofHours(1)).build();
 
         res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

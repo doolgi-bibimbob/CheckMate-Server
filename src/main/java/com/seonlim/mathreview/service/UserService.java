@@ -5,25 +5,37 @@ import com.seonlim.mathreview.dto.MyPageProfileUpdateRequest;
 import com.seonlim.mathreview.dto.MyPageReviewData;
 import com.seonlim.mathreview.dto.MyPageUserData;
 import com.seonlim.mathreview.entity.User;
+import com.seonlim.mathreview.exception.SamePasswordException;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import com.seonlim.mathreview.repository.ReviewRepository;
 import com.seonlim.mathreview.repository.UserRepository;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
     private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;  // 주입
 
 
     public MyPageUserData getMyPageUserData(Long userId) {
@@ -38,9 +50,7 @@ public class UserService {
                 .map(list -> list.stream()
                         .map(MyPageAnswerData::from)
                         .toList())
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "No answers found for user with id: " + userId));
+                .orElse(Collections.emptyList());
     }
 
     public List<MyPageReviewData> getMyPageReviewData(Long userId) {
@@ -63,12 +73,25 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void updatePassword(String newPassword, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new SamePasswordException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
+        }
+
+        log.info("newPassword={}", newPassword);
+        String newPasswordEncoded = passwordEncoder.encode(newPassword);
+        log.info("newPasswordEncoded={}", newPasswordEncoded);
+        user.setPassword(newPasswordEncoded);
         userRepository.save(user);
+
+        Authentication testAuth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), newPassword));
+        log.info("⏩ 내부 인증 성공 여부 = {}", testAuth.isAuthenticated());
+
     }
 
     public void deleteUser(Long userId) {

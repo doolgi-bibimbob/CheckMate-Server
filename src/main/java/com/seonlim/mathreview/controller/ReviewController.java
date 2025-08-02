@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.controller;
 
 import com.seonlim.mathreview.dto.CreateReviewRequest;
+import com.seonlim.mathreview.dto.ReviewDetail;
 import com.seonlim.mathreview.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,5 +19,10 @@ public class ReviewController {
                                              @RequestBody CreateReviewRequest request) {
         reviewService.createReview(answerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/review-detail/{reviewId}")
+    public ResponseEntity<ReviewDetail> getReviewDetail(@PathVariable Long reviewId) {
+        return ResponseEntity.ok(reviewService.getReviewDetail(reviewId));
     }
 }

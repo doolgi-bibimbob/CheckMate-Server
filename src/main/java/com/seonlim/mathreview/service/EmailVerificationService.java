@@ -20,11 +20,16 @@ public class EmailVerificationService {
     private final JavaMailSender mailSender;
 
     public void sendCode(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+
         String code = String.format("%06d", new Random().nextInt(999999));
         cache.saveCode(email, code);
         sendEmail(email, code);
         System.out.println("📤 인증 코드 전송: " + code + " → " + email);
     }
+
 
     private void sendEmail(String to, String code) {
         SimpleMailMessage message = new SimpleMailMessage();

@@ -9,8 +9,12 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(24)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.release = 17
 }
 
 configurations {
@@ -26,6 +30,10 @@ repositories {
 dependencies {
 	// 기본 QueryDSL JPA
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	implementation 'org.apache.commons:commons-lang3:3.18.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+	implementation("software.amazon.awssdk:s3:2.25.28")
+
 
 	// annotationProcessor (컴파일 시 Q타입 생성용)
 	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
