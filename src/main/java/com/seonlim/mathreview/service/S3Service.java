@@ -49,7 +49,7 @@ public class S3Service {
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
-                .contentType("image/jpeg")
+//                .contentType("image/jpeg")
                 .build();
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(builder ->

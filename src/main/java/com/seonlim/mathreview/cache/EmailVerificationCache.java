@@ -19,21 +19,28 @@ public class EmailVerificationCache {
     }
 
     public boolean verify(String email, String input) {
+        long now = System.currentTimeMillis();
+
         return Optional.ofNullable(codeStore.get(email))
                 .filter(code -> code.equals(input))
-                .filter(code -> Optional.ofNullable(timestamps.get(email))
-                        .filter(t -> System.currentTimeMillis() - t <= EXPIRE_MS)
-                        .isPresent()
+                .flatMap(code ->
+                        Optional.ofNullable(timestamps.get(email))
+                                .filter(t -> now - t <= EXPIRE_MS)
+                                .map(t -> {
+                                    verifiedStore.put(email, true);
+                                    invalidate(email);
+                                    return true;
+                                })
                 )
-                .map(code -> {
-                    verifiedStore.put(email, true);
-                    return true;
+                .or(() -> {
+                    Optional.ofNullable(timestamps.get(email))
+                            .filter(t -> now - t > EXPIRE_MS)
+                            .ifPresent(t -> invalidate(email));
+                    return Optional.of(false);
                 })
-                .orElseGet(() -> {
-                    invalidate(email);
-                    return false;
-                });
+                .get();
     }
+
 
     public boolean isVerified(String email) {
         return verifiedStore.getOrDefault(email, false);
