@@ -5,6 +5,7 @@ import com.seonlim.mathreview.dto.ReviewDetail;
 import com.seonlim.mathreview.entity.*;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import com.seonlim.mathreview.repository.ReviewAnnotationRepository;
+import com.seonlim.mathreview.repository.ReviewLayerRepository;
 import com.seonlim.mathreview.repository.ReviewRepository;
 import com.seonlim.mathreview.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class ReviewService {
     private final AnswerRepository answerRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewAnnotationRepository annotationRepository;
+    private final ReviewLayerRepository reviewLayerRepository;
 
 
     @Transactional
@@ -42,6 +44,14 @@ public class ReviewService {
 //                        .reviewerType(reviewer.getUserType())
                         .build()
         );
+        
+        List<ReviewLayer> reviewLayers = req.layers().stream()
+                .map(dto -> ReviewLayer.builder()
+                        .imgUrl(dto.imgUrl())
+                        .pageNumber(dto.pageNumber())
+                        .review(review)
+                        .build())
+                .toList();
 
         List<ReviewAnnotation> annotations = req.annotations().stream()
                 .map(dto -> {
@@ -53,6 +63,7 @@ public class ReviewService {
                             .position(new Position(dto.position().getX(), dto.position().getY()))
                             .width(dto.width())
                             .height(dto.height())
+                            .pageNumber(dto.pageNumber())
                             .build();
                     ann.setReview(review);
                     return ann;
@@ -60,6 +71,7 @@ public class ReviewService {
                 .toList();
 
         annotationRepository.saveAll(annotations);
+        reviewLayerRepository.saveAll(reviewLayers);
     }
 
     public ReviewDetail getReviewDetail(Long reviewId) {

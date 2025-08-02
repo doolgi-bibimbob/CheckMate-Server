@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -42,4 +43,10 @@ public class Review {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<ReviewAnnotation> annotations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ReviewLayer> layers = new ArrayList<>();
+
 }

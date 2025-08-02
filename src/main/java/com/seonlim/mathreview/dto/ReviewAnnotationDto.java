@@ -9,7 +9,8 @@ public record ReviewAnnotationDto(
         Position position,
         int width,
         int height,
-        long index
+        long index,
+        long pageNumber
 ) {
     public static ReviewAnnotationDto from(ReviewAnnotation a) {
         return new ReviewAnnotationDto(
@@ -18,7 +19,8 @@ public record ReviewAnnotationDto(
                 a.getPosition(),
                 a.getWidth(),
                 a.getHeight(),
-                a.getIndex()
+                a.getIndex(),
+                a.getPageNumber()
         );
     }
 

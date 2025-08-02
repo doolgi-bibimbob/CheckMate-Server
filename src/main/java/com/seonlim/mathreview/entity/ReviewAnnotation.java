@@ -26,6 +26,8 @@ public class ReviewAnnotation {
 
     private Long index;
 
+    private Long pageNumber;
+
     @Column(columnDefinition = "TEXT")
     private String content;
 

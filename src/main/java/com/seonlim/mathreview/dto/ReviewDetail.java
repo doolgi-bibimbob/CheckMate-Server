@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.dto;
 
 import com.seonlim.mathreview.entity.Review;
+import com.seonlim.mathreview.entity.ReviewLayer;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +14,8 @@ public record ReviewDetail(
         String reviewerType,
         String aiReviewContent,
         LocalDateTime createdAt,
-        List<ReviewAnnotationDto> annotations
+        List<ReviewAnnotationDto> annotations,
+        List<ReviewLayerDto> layers
 
 ) {
     public static ReviewDetail from(Review review) {
@@ -27,6 +29,9 @@ public record ReviewDetail(
                 review.getCreatedAt(),
                 review.getAnnotations().stream()
                         .map(ReviewAnnotationDto::from)
+                        .toList(),
+                review.getLayers().stream()
+                        .map(ReviewLayerDto::from)
                         .toList()
         );
     }

@@ -27,15 +27,14 @@ public class EmailVerificationCache {
                         Optional.ofNullable(timestamps.get(email))
                                 .filter(t -> now - t <= EXPIRE_MS)
                                 .map(t -> {
-                                    verifiedStore.put(email, true);
-                                    invalidate(email);
+                                    verifiedStore.put(email, true); // 인증 성공만 저장
                                     return true;
                                 })
                 )
                 .or(() -> {
                     Optional.ofNullable(timestamps.get(email))
                             .filter(t -> now - t > EXPIRE_MS)
-                            .ifPresent(t -> invalidate(email));
+                            .ifPresent(t -> invalidate(email)); // 만료된 경우에만 삭제
                     return Optional.of(false);
                 })
                 .get();
