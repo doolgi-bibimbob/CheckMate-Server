@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.controller;
 
 import com.seonlim.mathreview.dto.AnswerDetail;
+import com.seonlim.mathreview.dto.AnswerSubmit;
 import com.seonlim.mathreview.dto.AnswerSubmitRequest;
 import com.seonlim.mathreview.dto.AnswerSubmitRequestListTest;
 import com.seonlim.mathreview.service.AnswerService;
@@ -22,9 +23,9 @@ public class AnswerController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/submit-test-list")
-    public ResponseEntity<Void> submitAnswerListTest(@RequestBody AnswerSubmitRequestListTest request) {
-        answerService.submitListTest(request);
+    @PostMapping("/submit")
+    public ResponseEntity<Void> submitAnswerListTest(@RequestBody AnswerSubmit request) {
+        answerService.submitAnswer(request);
         return ResponseEntity.ok().build();
     }
 

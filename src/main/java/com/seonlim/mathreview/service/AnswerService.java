@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.service;
 
 import com.seonlim.mathreview.dto.AnswerDetail;
+import com.seonlim.mathreview.dto.AnswerSubmit;
 import com.seonlim.mathreview.entity.*;
 import com.seonlim.mathreview.repository.ProblemRepository;
 import com.seonlim.mathreview.dto.AnswerSubmitRequest;
@@ -71,19 +72,19 @@ public class AnswerService {
         problem.recordSubmission(isCorrect);
         problemRepository.save(problem);
     }
-
+    
     @Transactional
-    public void submitListTest(AnswerSubmitRequestListTest request) {
-        Problem problem = problemRepository.findById(request.getProblemId())
+    public void submitAnswer(AnswerSubmit request) {
+        Problem problem = problemRepository.findById(request.problemId())
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "문제 ID가 유효하지 않습니다: " + request.getProblemId()));
+                        "문제 ID가 유효하지 않습니다: " + request.problemId()));
 
         CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
         User user = principal.getDomain();
 
-        boolean isCorrect = Objects.equals(request.getAnswer(), problem.getAnswer());
+        boolean isCorrect = Objects.equals(request.answer(), problem.getAnswer());
         AnswerStatus status = isCorrect ? AnswerStatus.CORRECT : AnswerStatus.INCORRECT;
 
         problem.recordSubmission(isCorrect);
@@ -92,22 +93,24 @@ public class AnswerService {
         Answer answer = Answer.builder()
                 .user(user)
                 .problem(problem)
-                .answerImgSolutions(request.getAnswerImgUrls())
+                .answerImgSolutions(request.answerImgUrls())
                 .status(status)
                 .submittedAt(LocalDateTime.now())
                 .build();
         answerRepository.save(answer);
 
-        request.setAnswerId(answer.getId());
-        request.setProblemImgUrl(problem.getProblemImageUrl());
-        Optional.ofNullable(problem.getSolutionImageUrl())
-                .ifPresentOrElse(
-                        url -> request.setSolutionImgUrls(List.of(url)),
-                        ()  -> request.setSolutionImgUrls(List.of())
-                );
+        AnswerSubmit generated = AnswerSubmit.withGeneratedAnswerInfo(
+                request,
+                answer.getId(),
+                problem.getProblemImageUrl(),
+                Optional.ofNullable(problem.getSolutionImageUrl())
+                        .map(List::of)
+                        .orElse(List.of())
+        );
 
-        reviewRequestKafkaProducer.sendReviewRequestTest(request);
+        reviewRequestKafkaProducer.sendReviewRequestTest(generated);
     }
+
 
     public AnswerDetail getAnswerDetail(Long answerId) {
         Answer answer = answerRepository.findByIdFetch(answerId)

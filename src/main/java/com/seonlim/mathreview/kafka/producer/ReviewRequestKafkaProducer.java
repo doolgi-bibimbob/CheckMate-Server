@@ -2,6 +2,7 @@ package com.seonlim.mathreview.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.seonlim.mathreview.dto.AnswerSubmit;
 import com.seonlim.mathreview.dto.AnswerSubmitRequest;
 import com.seonlim.mathreview.dto.AnswerSubmitRequestListTest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class ReviewRequestKafkaProducer {
         }
     }
 
-    public void sendReviewRequestTest(AnswerSubmitRequestListTest request) {
+    public void sendReviewRequestTest(AnswerSubmit request) {
         try {
             String json = objectMapper.writeValueAsString(request);
             kafkaTemplate.send("gpt-review-requests-test", json);
