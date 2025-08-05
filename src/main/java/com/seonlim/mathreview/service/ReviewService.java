@@ -35,14 +35,16 @@ public class ReviewService {
                 (CustomUserDetails) SecurityContextHolder.getContext()
                         .getAuthentication()
                         .getPrincipal();
+
         User reviewer = principal.getDomain();
+
+        ReviewerType reviewerType = ReviewerType.fromUserType(reviewer.getUserType());
 
         Review review = reviewRepository.save(
                 Review.builder()
                         .answer(answer)
                         .reviewer(reviewer)
-                        .reviewerType(ReviewerType.STUDENT)
-//                        .reviewerType(reviewer.getUserType())
+                        .reviewerType(reviewerType)
                         .build()
         );
         
