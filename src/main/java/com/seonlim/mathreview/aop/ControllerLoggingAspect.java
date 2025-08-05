@@ -2,6 +2,7 @@ package com.seonlim.mathreview.aop;
 
 import com.seonlim.mathreview.security.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 @Component
 @Slf4j
 public class ControllerLoggingAspect {
+
     @Pointcut("execution(* com.seonlim.mathreview.controller..*(..))")
     public void controllerMethods() {}
 
@@ -34,38 +36,44 @@ public class ControllerLoggingAspect {
 
         if (request == null) return pjp.proceed();
 
-        MDC.put("ip", request.getRemoteAddr());
+        // MDC 저장
+        String ip = request.getRemoteAddr();
+        MDC.put("ip", ip);
 
         Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .filter(auth -> auth.isAuthenticated() && auth.getPrincipal() instanceof CustomUserDetails)
                 .map(Authentication::getPrincipal)
-                .filter(CustomUserDetails.class::isInstance)
                 .map(CustomUserDetails.class::cast)
                 .map(details -> details.getDomain().getId())
                 .map(String::valueOf)
                 .ifPresent(userId -> MDC.put("userId", userId));
 
+        String userId = MDC.get("userId");
         String method = request.getMethod();
         String uri = request.getRequestURI();
 
         String params = Stream.of(pjp.getArgs())
-                .filter(arg -> !(arg instanceof HttpServletRequest) && arg != null)
+                .filter(arg -> arg != null &&
+                        !(arg instanceof HttpServletRequest) &&
+                        !(arg instanceof HttpServletResponse))
                 .map(Object::toString)
                 .reduce((a, b) -> a + ", " + b)
                 .orElse("");
 
-        log.info("➡️ [{} {}] params = {}", method, uri, params);
+        log.info("➡️ [{} {}] [userId={}] [ip={}] request = {}", method, uri, userId, ip, params);
 
         long start = System.currentTimeMillis();
 
         try {
             Object result = pjp.proceed();
-            log.info("⬅️ [{} {}] 응답 완료 ({} ms)", method, uri, System.currentTimeMillis() - start);
+            log.info("⬅️ [{} {}] [userId={}] [ip={}] 응답 완료 ({} ms)", method, uri, userId, ip, System.currentTimeMillis() - start);
             return result;
         } catch (Exception ex) {
-            log.error("❌ [{} {}] 예외 발생: {}", method, uri, ex.getMessage(), ex);
+            log.error("❌ [{} {}] [userId={}] [ip={}] 예외 발생: {}", method, uri, userId, ip, ex.getMessage(), ex);
             throw ex;
         } finally {
             MDC.clear();
         }
     }
 }
+
