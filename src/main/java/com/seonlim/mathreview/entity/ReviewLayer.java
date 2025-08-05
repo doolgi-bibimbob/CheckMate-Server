@@ -23,4 +23,6 @@ public class ReviewLayer {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "review_id")
     private Review review;
+
+    private String backgroundImgUrl;
 }

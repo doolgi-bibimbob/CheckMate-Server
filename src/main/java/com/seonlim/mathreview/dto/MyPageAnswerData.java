@@ -10,7 +10,8 @@ public record MyPageAnswerData(
         String problemTitle,
         int likeCount,
         LocalDateTime submittedAt,
-        AnswerStatus status
+        AnswerStatus status,
+        Long problemId
 ) {
     public static MyPageAnswerData from(Answer a) {
         return new MyPageAnswerData(
@@ -18,7 +19,8 @@ public record MyPageAnswerData(
                 a.getProblem().getTitle(),
                 a.getLikeCount(),
                 a.getSubmittedAt(),
-                a.getStatus()
+                a.getStatus(),
+                a.getProblem().getId()
         );
     }
 }

@@ -50,6 +50,7 @@ public class ReviewService {
                 .map(dto -> ReviewLayer.builder()
                         .imgUrl(dto.imgUrl())
                         .pageNumber(dto.pageNumber())
+                        .backgroundImgUrl(dto.backgroundImgUrl())
                         .review(review)
                         .build())
                 .toList();
@@ -88,6 +89,7 @@ public class ReviewService {
             ReviewLayer layer = ReviewLayer.builder()
                     .imgUrl(dto.imgUrl())
                     .pageNumber(dto.pageNumber())
+                    .backgroundImgUrl(dto.backgroundImgUrl())
                     .review(review)
                     .build();
             review.getLayers().add(layer);

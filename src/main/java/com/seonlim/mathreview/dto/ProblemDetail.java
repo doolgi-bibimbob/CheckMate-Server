@@ -18,6 +18,7 @@ public record ProblemDetail(
         Long correctSubmissionCount,
         double accuracyRate,
         Long answer,
+        Long year,
         List<TagSummary> tags,
         List<AnswerSummary> answers
 ) {
@@ -35,6 +36,7 @@ public record ProblemDetail(
                 p.getCorrectSubmissionCount(),
                 p.getAccuracyRate(),
                 p.getAnswer(),
+                (long) p.getExam().getYear(),
                 p.getTags().stream()
                         .map(TagSummary::from)
                         .toList(),

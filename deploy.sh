@@ -17,7 +17,7 @@ BUILD_TS="$(date +%Y%m%d-%H%M%S)"
 TAG="${COMMIT_HASH}-${BUILD_TS}"
 
 BASTION_KEY="/Users/edward/desktop/mathreview-nat-bastion.pem"
-BASTION_HOST="13.125.16.245"
+BASTION_HOST="43.203.249.47"
 PRIVATE_HOST="10.0.0.145"
 
 CONTAINER_NAME="mathreview-app"
