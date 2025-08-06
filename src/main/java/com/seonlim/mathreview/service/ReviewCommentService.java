@@ -1,6 +1,7 @@
 package com.seonlim.mathreview.service;
 
 import com.seonlim.mathreview.dto.ReviewCommentRequest;
+import com.seonlim.mathreview.dto.ReviewCommentResponse;
 import com.seonlim.mathreview.entity.Review;
 import com.seonlim.mathreview.entity.ReviewComment;
 import com.seonlim.mathreview.entity.User;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,14 +37,8 @@ public class ReviewCommentService {
                 .orElseThrow(() -> new IllegalArgumentException("유저 정보가 유효하지 않습니다."));
 
         ReviewComment parent = Optional.ofNullable(request.parentId())
-                .map(parentId -> {
-                    ReviewComment c = commentRepository.findById(parentId)
-                            .orElseThrow(() -> new IllegalArgumentException("부모 댓글이 존재하지 않습니다: " + parentId));
-                    if (c.getParent() != null) {
-                        throw new IllegalArgumentException("대댓글에는 또 다른 대댓글을 달 수 없습니다.");
-                    }
-                    return c;
-                })
+                .map(parentId -> commentRepository.findById(parentId)
+                        .orElseThrow(() -> new IllegalArgumentException("부모 댓글이 존재하지 않습니다: " + parentId)))
                 .orElse(null);
 
         ReviewComment comment = ReviewComment.builder()
@@ -75,4 +71,14 @@ public class ReviewCommentService {
         commentRepository.delete(comment);
     }
 
+    @Transactional(readOnly = true)
+    public List<ReviewCommentResponse> findCommentsByReviewId(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다: " + reviewId));
+
+        return commentRepository.findByReview(review).stream()
+                .filter(c -> c.getParent() == null)
+                .map(ReviewCommentResponse::from)
+                .toList();
+    }
 }

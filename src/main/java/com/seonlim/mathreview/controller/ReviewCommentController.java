@@ -1,11 +1,14 @@
 package com.seonlim.mathreview.controller;
 
 import com.seonlim.mathreview.dto.ReviewCommentRequest;
+import com.seonlim.mathreview.dto.ReviewCommentResponse;
 import com.seonlim.mathreview.service.ReviewCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/review-comments")
@@ -24,5 +27,11 @@ public class ReviewCommentController {
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         reviewCommentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<List<ReviewCommentResponse>> getCommentsByReviewId(@PathVariable Long reviewId) {
+        List<ReviewCommentResponse> comments = reviewCommentService.findCommentsByReviewId(reviewId);
+        return ResponseEntity.ok(comments);
     }
 }
