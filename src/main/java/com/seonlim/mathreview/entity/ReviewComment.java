@@ -36,9 +36,13 @@ public class ReviewComment {
     @JoinColumn(name = "parent_id")
     private ReviewComment parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<ReviewComment> children = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 }

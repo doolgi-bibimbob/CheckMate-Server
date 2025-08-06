@@ -2,6 +2,7 @@ package com.seonlim.mathreview.controller;
 
 import com.seonlim.mathreview.dto.ReviewCommentRequest;
 import com.seonlim.mathreview.dto.ReviewCommentResponse;
+import com.seonlim.mathreview.dto.ReviewCommentUpdateRequest;
 import com.seonlim.mathreview.service.ReviewCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class ReviewCommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         reviewCommentService.deleteComment(commentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/reviews/comments")
+    public ResponseEntity<Void> updateComment(@RequestBody ReviewCommentUpdateRequest request) {
+        reviewCommentService.updateComment(request);
         return ResponseEntity.noContent().build();
     }
 

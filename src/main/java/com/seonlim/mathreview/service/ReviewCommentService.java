@@ -2,6 +2,7 @@ package com.seonlim.mathreview.service;
 
 import com.seonlim.mathreview.dto.ReviewCommentRequest;
 import com.seonlim.mathreview.dto.ReviewCommentResponse;
+import com.seonlim.mathreview.dto.ReviewCommentUpdateRequest;
 import com.seonlim.mathreview.entity.Review;
 import com.seonlim.mathreview.entity.ReviewComment;
 import com.seonlim.mathreview.entity.User;
@@ -46,6 +47,7 @@ public class ReviewCommentService {
                 .author(author)
                 .content(request.content())
                 .parent(parent)
+                .deleted(false)
                 .build();
 
         commentRepository.save(comment);
@@ -61,14 +63,14 @@ public class ReviewCommentService {
                 .getAuthentication()
                 .getPrincipal();
 
-        User currentUser = userRepository.findById(principal.getDomain().getId())
-                .orElseThrow(() -> new IllegalArgumentException("유저 정보가 유효하지 않습니다."));
+        Long currentUserId = principal.getDomain().getId();
 
-        Optional.of(comment)
-                .filter(c -> c.getAuthor().getId().equals(currentUser.getId()))
-                .orElseThrow(() -> new SecurityException("본인이 작성한 댓글만 삭제할 수 있습니다."));
+        if (!comment.getAuthor().getId().equals(currentUserId)) {
+            throw new SecurityException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+        }
 
-        commentRepository.delete(comment);
+        comment.setDeleted(true);
+//        comment.setContent("삭제된 댓글입니다.");
     }
 
     @Transactional(readOnly = true)
@@ -81,4 +83,21 @@ public class ReviewCommentService {
                 .map(ReviewCommentResponse::from)
                 .toList();
     }
+
+    @Transactional
+    public void updateComment(ReviewCommentUpdateRequest request) {
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Long currentUserId = principal.getDomain().getId();
+
+        ReviewComment comment = commentRepository.findById(request.commentId())
+                .filter(c -> !c.isDeleted())
+                .filter(c -> c.getAuthor().getId().equals(currentUserId))
+                .orElseThrow(() -> new SecurityException("삭제되었거나 권한이 없는 댓글입니다."));
+
+        comment.setContent(request.content());
+    }
+
+
 }

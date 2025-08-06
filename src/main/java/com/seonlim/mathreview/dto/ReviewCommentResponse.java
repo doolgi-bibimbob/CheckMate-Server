@@ -15,6 +15,7 @@ public record ReviewCommentResponse(
         Long parentId,
         String profileImgUrl,
         String parentAuthorName,
+        Boolean isDeleted,
         List<ReviewCommentResponse> children
 ) {
     public static ReviewCommentResponse from(ReviewComment comment) {
@@ -35,6 +36,7 @@ public record ReviewCommentResponse(
                 parentId,
                 comment.getAuthor().getProfileImageUrl(),
                 parentAuthorName,
+                comment.isDeleted(),
                 children
         );
     }
