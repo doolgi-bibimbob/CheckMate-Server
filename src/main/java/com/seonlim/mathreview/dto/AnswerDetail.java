@@ -1,5 +1,6 @@
 package com.seonlim.mathreview.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.seonlim.mathreview.entity.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,14 @@ public record AnswerDetail(
         String problemTitle,
         String username,
         AnswerStatus status,
+
+        @JsonFormat(
+                shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                timezone = "UTC"
+        )
         LocalDateTime submittedAt,
+
         List<String> answerImgSolutions,
         AiReview aiReview,                    // null 가능
         List<UserReviewSummary> userReviewSummaries
@@ -43,7 +51,15 @@ public record AnswerDetail(
         }
     }
 
-    public record UserReviewSummary(Long id, String reviewerName, LocalDateTime createdAt) {
+    public record UserReviewSummary(
+            Long id,
+            String reviewerName,
+            @JsonFormat(
+                    shape = JsonFormat.Shape.STRING,
+                    pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                    timezone = "UTC"
+            )
+            LocalDateTime createdAt) {
         public static UserReviewSummary from(Review r) {
             return new UserReviewSummary(r.getId(), r.getReviewer().getUsername(), r.getCreatedAt());
         }

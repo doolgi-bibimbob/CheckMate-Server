@@ -1,5 +1,6 @@
 package com.seonlim.mathreview.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.seonlim.mathreview.entity.Review;
 import com.seonlim.mathreview.entity.ReviewLayer;
 
@@ -13,6 +14,11 @@ public record ReviewDetail(
         String reviewerName,
         String reviewerType,
         String aiReviewContent,
+        @JsonFormat(
+                shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                timezone = "UTC"
+        )
         LocalDateTime createdAt,
         List<ReviewAnnotationDto> annotations,
         List<ReviewLayerDto> layers

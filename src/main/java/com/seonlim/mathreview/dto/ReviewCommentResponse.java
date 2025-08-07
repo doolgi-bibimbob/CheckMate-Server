@@ -1,5 +1,6 @@
 package com.seonlim.mathreview.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.seonlim.mathreview.entity.ReviewComment;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,14 @@ public record ReviewCommentResponse(
         Long authorId,
         String authorName,
         String content,
+
+        @JsonFormat(
+                shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                timezone = "UTC"
+        )
         LocalDateTime createdAt,
+
         Long parentId,
         String profileImgUrl,
         String parentAuthorName,
