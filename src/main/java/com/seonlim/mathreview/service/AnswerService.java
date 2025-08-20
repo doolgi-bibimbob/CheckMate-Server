@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -57,13 +54,15 @@ public class AnswerService {
                 .build();
         answerRepository.save(answer);
 
+        List<String> solutionUrls = Optional.ofNullable(problem.getProblemImgSolutions())
+                .map(ArrayList::new)
+                .orElseGet(ArrayList::new);
+
         AnswerSubmit generated = AnswerSubmit.withGeneratedAnswerInfo(
                 request,
                 answer.getId(),
                 problem.getProblemImageUrl(),
-                Optional.ofNullable(problem.getSolutionImageUrl())
-                        .map(List::of)
-                        .orElse(List.of())
+                solutionUrls
         );
 
         reviewRequestKafkaProducer.sendReviewRequestTest(generated);

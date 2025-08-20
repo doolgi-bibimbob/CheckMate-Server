@@ -1,3 +1,62 @@
 spring:
   profiles:
     active: local
+
+# application-local.yml example
+#spring:
+#  kafka:
+#    bootstrap-servers: localhost:9092
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#    consumer:
+#      group-id: gpt-review-group
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/math_review
+#    username: ${DB_USERNAME:math}
+#    password: ${DB_PASSWORD:review123}
+#    driver-class-name: org.postgresql.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: false
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: ${MAIL_USERNAME:example@gmail.com}
+#    password: ${MAIL_PASSWORD:changeme}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#
+#logging:
+#  level:
+#    org.springframework.security.web.authentication: WARN
+#    org.apache.kafka: WARN
+#
+#jwt:
+#  secret: ${JWT_SECRET:changeme}
+#  expiration: 3600000
+#
+#cloud:
+#  aws:
+#    region:
+#      static: ap-northeast-2
+#    credentials:
+#      access-key: ${AWS_ACCESS_KEY:changeme}
+#      secret-key: ${AWS_SECRET_KEY:changeme}
+#    s3:
+#      bucket: ${AWS_BUCKET:math-review-test}

@@ -16,9 +16,9 @@ COMMIT_HASH="$(git rev-parse --short HEAD)"
 BUILD_TS="$(date +%Y%m%d-%H%M%S)"
 TAG="${COMMIT_HASH}-${BUILD_TS}"
 
-BASTION_KEY="/Users/edward/desktop/mathreview-nat-bastion.pem"
-BASTION_HOST="43.203.249.47"
-PRIVATE_HOST="10.0.0.145"
+BASTION_KEY=""
+BASTION_HOST=""
+PRIVATE_HOST=""
 
 CONTAINER_NAME="mathreview-app"
 
