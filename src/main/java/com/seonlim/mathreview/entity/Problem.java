@@ -46,9 +46,9 @@ public class Problem {
     private String title;
 
     public double getAccuracyRate() {
-        return submissionCount > 0
-                ? (correctSubmissionCount * 100.0) / submissionCount
-                : 0.0;
+        if (submissionCount == 0) return 0.0;
+        double rate = (correctSubmissionCount * 100.0) / submissionCount;
+        return Math.round(rate * 100.0) / 100.0;
     }
 
     public void recordSubmission(boolean isCorrect) {
