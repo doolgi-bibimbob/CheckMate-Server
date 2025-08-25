@@ -6,6 +6,7 @@ import com.seonlim.mathreview.dto.MyPageReviewData;
 import com.seonlim.mathreview.dto.MyPageUserData;
 import com.seonlim.mathreview.entity.User;
 import com.seonlim.mathreview.exception.SamePasswordException;
+import com.seonlim.mathreview.exception.VerificationException;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import com.seonlim.mathreview.repository.ReviewRepository;
 import com.seonlim.mathreview.repository.UserRepository;
@@ -33,6 +34,7 @@ public class UserService {
     private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailVerificationService emailVerificationService;
 
 
     public MyPageUserData getMyPageUserData(Long userId) {
@@ -75,26 +77,43 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
+        if (!emailVerificationService.isVerified(user.getEmail())) {
+            throw new VerificationException("비밀번호 변경을 위한 이메일 인증이 완료되지 않았습니다.");
+        }
+
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new SamePasswordException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
         }
 
-        log.info("newPassword={}", newPassword);
         String newPasswordEncoded = passwordEncoder.encode(newPassword);
-        log.info("newPasswordEncoded={}", newPasswordEncoded);
         user.setPassword(newPasswordEncoded);
         userRepository.save(user);
+
+        emailVerificationService.invalidate(user.getEmail());
 
         Authentication testAuth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getEmail(), newPassword));
         log.info("⏩ 내부 인증 성공 여부 = {}", testAuth.isAuthenticated());
-
     }
+
 
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         userRepository.delete(user);
+    }
+
+    public void sendPasswordUpdateCode(String email) {
+        if (!userRepository.existsByEmail(email)) {
+            throw new ResourceNotFoundException("해당 이메일의 사용자가 없습니다.");
+        }
+        emailVerificationService.sendCode(email);
+    }
+
+    public void verifyPasswordUpdateCode(String email, String code) {
+        Optional.of(emailVerificationService.verifyCode(email, code))
+                .filter(Boolean::booleanValue)
+                .orElseThrow(() -> new VerificationException("비밀번호 변경용 인증 코드가 유효하지 않습니다."));
     }
 }
