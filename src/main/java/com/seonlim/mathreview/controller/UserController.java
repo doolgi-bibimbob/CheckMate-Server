@@ -58,18 +58,18 @@ public class UserController {
 //    }
 
     @PostMapping("/password/code")
-    public void sendPwCode(@RequestParam String email) {
-        userService.sendPasswordUpdateCode(email);
+    public void sendPwCode(@RequestBody PasswordCodeRequest request) {
+        userService.sendPasswordUpdateCode(request);
     }
 
     @PostMapping("/password/verify")
-    public void verifyPwCode(@RequestParam String email, @RequestParam String code) {
-        userService.verifyPasswordUpdateCode(email, code);
+    public void verifyPwCode(@RequestBody PasswordVerifyRequest request) {
+        userService.verifyPasswordUpdateCode(request.email(), request.code());
     }
 
     @PostMapping("/password/update")
-    public void updatePw(@RequestParam String email, @RequestParam String newPassword) {
-        userService.updatePassword(email, newPassword);
+    public void updatePw(@RequestBody PasswordUpdateRequest request) {
+        userService.updatePassword(request.email(), request.newPassword());
     }
 
 }
