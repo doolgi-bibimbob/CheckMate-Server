@@ -79,7 +79,7 @@ public class EmailVerificationService {
     private void sendSignupEmail(String to, String code) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);
-        msg.setSubject("[MathReview] 이메일 인증 코드");
+        msg.setSubject("[CheckMate] 이메일 인증 코드");
         msg.setText("인증 코드: " + code + "\n\n본 코드는 5분간 유효합니다.");
         mailSender.send(msg);
     }
