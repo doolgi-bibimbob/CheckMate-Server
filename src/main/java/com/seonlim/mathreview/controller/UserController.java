@@ -4,7 +4,6 @@ import com.seonlim.mathreview.dto.*;
 import com.seonlim.mathreview.security.CustomUserDetails;
 import com.seonlim.mathreview.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,13 +48,28 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/my-page/password-update")
-    public ResponseEntity<Void> updateUserPassword(
-            @RequestBody @Valid PasswordUpdateRequest req,
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        userService.updatePassword(req.newPassword(), userDetails.getDomain().getId());
-        return ResponseEntity.ok().build();
+//    @PostMapping("/my-page/password-update")
+//    public ResponseEntity<Void> updateUserPassword(
+//            @RequestBody @Valid PasswordUpdateRequest req,
+//            @AuthenticationPrincipal CustomUserDetails userDetails
+//    ) {
+//        userService.updatePassword(req.newPassword(), userDetails.getDomain().getId());
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping("/password/code")
+    public void sendPwCode(@RequestParam String email) {
+        userService.sendPasswordUpdateCode(email);
+    }
+
+    @PostMapping("/password/verify")
+    public void verifyPwCode(@RequestParam String email, @RequestParam String code) {
+        userService.verifyPasswordUpdateCode(email, code);
+    }
+
+    @PostMapping("/password/update")
+    public void updatePw(@RequestParam String email, @RequestParam String newPassword) {
+        userService.updatePassword(email, newPassword);
     }
 
 }
