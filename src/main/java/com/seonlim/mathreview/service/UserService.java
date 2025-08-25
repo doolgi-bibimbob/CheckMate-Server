@@ -13,7 +13,6 @@ import com.seonlim.mathreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,29 +72,27 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(String newPassword, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+    public void updatePassword(String email, String newPassword) {
+        User user = Optional.ofNullable(email)
+                .filter(emailVerificationService::isPasswordUpdateVerified)
+                .flatMap(userRepository::findByEmail)
+                .orElseThrow(() ->
+                        new VerificationException("비밀번호 변경 인증 미완료 또는 사용자가 존재하지 않습니다."));
 
-        if (!emailVerificationService.isVerified(user.getEmail())) {
-            throw new VerificationException("비밀번호 변경을 위한 이메일 인증이 완료되지 않았습니다.");
-        }
+        Optional.of(user)
+                .filter(u -> !passwordEncoder.matches(newPassword, u.getPassword()))
+                .map(u -> {
+                    u.setPassword(passwordEncoder.encode(newPassword));
+                    return userRepository.save(u);
+                })
+                .orElseThrow(() -> new SamePasswordException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다."));
 
-        if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new SamePasswordException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
-        }
-
-        String newPasswordEncoded = passwordEncoder.encode(newPassword);
-        user.setPassword(newPasswordEncoded);
-        userRepository.save(user);
-
-        emailVerificationService.invalidate(user.getEmail());
+        emailVerificationService.invalidatePasswordUpdate(user.getEmail());
 
         Authentication testAuth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getEmail(), newPassword));
         log.info("⏩ 내부 인증 성공 여부 = {}", testAuth.isAuthenticated());
     }
-
 
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
@@ -108,11 +105,11 @@ public class UserService {
         if (!userRepository.existsByEmail(email)) {
             throw new ResourceNotFoundException("해당 이메일의 사용자가 없습니다.");
         }
-        emailVerificationService.sendCode(email);
+        emailVerificationService.sendPasswordUpdateCode(email);
     }
 
     public void verifyPasswordUpdateCode(String email, String code) {
-        Optional.of(emailVerificationService.verifyCode(email, code))
+        Optional.of(emailVerificationService.verifyPasswordUpdateCode(email, code))
                 .filter(Boolean::booleanValue)
                 .orElseThrow(() -> new VerificationException("비밀번호 변경용 인증 코드가 유효하지 않습니다."));
     }
