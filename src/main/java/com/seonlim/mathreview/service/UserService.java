@@ -1,9 +1,6 @@
 package com.seonlim.mathreview.service;
 
-import com.seonlim.mathreview.dto.MyPageAnswerData;
-import com.seonlim.mathreview.dto.MyPageProfileUpdateRequest;
-import com.seonlim.mathreview.dto.MyPageReviewData;
-import com.seonlim.mathreview.dto.MyPageUserData;
+import com.seonlim.mathreview.dto.*;
 import com.seonlim.mathreview.entity.User;
 import com.seonlim.mathreview.exception.SamePasswordException;
 import com.seonlim.mathreview.exception.VerificationException;
@@ -101,11 +98,11 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void sendPasswordUpdateCode(String email) {
-        if (!userRepository.existsByEmail(email)) {
+    public void sendPasswordUpdateCode(PasswordCodeRequest request) {
+        if (!userRepository.existsByEmail(request.email())) {
             throw new ResourceNotFoundException("해당 이메일의 사용자가 없습니다.");
         }
-        emailVerificationService.sendPasswordUpdateCode(email);
+        emailVerificationService.sendPasswordUpdateCode(request.email());
     }
 
     public void verifyPasswordUpdateCode(String email, String code) {
