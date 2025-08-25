@@ -9,7 +9,6 @@ import com.seonlim.mathreview.exception.SamePasswordException;
 import com.seonlim.mathreview.repository.AnswerRepository;
 import com.seonlim.mathreview.repository.ReviewRepository;
 import com.seonlim.mathreview.repository.UserRepository;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -33,9 +32,7 @@ public class UserService {
     private final AnswerRepository answerRepository;
     private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    AuthenticationManager authenticationManager;  // 주입
+    private final AuthenticationManager authenticationManager;
 
 
     public MyPageUserData getMyPageUserData(Long userId) {
