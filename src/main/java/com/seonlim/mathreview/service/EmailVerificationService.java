@@ -87,7 +87,7 @@ public class EmailVerificationService {
     private void sendPwUpdateEmail(String to, String code) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);
-        msg.setSubject("[MathReview] 비밀번호 변경 인증 코드");
+        msg.setSubject("[CheckMate] 비밀번호 변경 인증 코드");
         msg.setText("비밀번호 변경 인증 코드: " + code + "\n\n본 코드는 5분간 유효합니다.");
         mailSender.send(msg);
     }
